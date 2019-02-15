@@ -27,10 +27,12 @@ Zoo :: Zoo(){
     this->m = new Monkey[this->monkeysize];
     this->adultMonkey = 0;
     this->numMonkeybaby = 0;
+    
     this->ottersize = 0;
     this->se = new Sea_otter[this->ottersize];
     this->adultOtter;
     this->numOtterbaby = 0;
+    
     this->slothsize = 0;
     this->sl = new Sloth[this->slothsize];
     this->adultSloth = 0;
@@ -73,10 +75,12 @@ Zoo :: Zoo(const Zoo& z1){
     this->m = new Monkey[z1.monkeysize];
     this->adultMonkey = z1.adultMonkey;
     this->numMonkeybaby = z1.numMonkeybaby;
+    
     this->ottersize = z1.ottersize;
     this->se = new Sea_otter[z1.ottersize];
     this->adultOtter = z1.adultOtter;
     this->numOtterbaby = z1.numOtterbaby;
+    
     this->slothsize = z1.slothsize;
     this->sl = new Sloth[z1.slothsize];
     this->adultSloth = z1.adultSloth;
@@ -105,10 +109,12 @@ void Zoo :: operator=(const Zoo& z){
     this->m = new Monkey[z.monkeysize] ();
     this->adultMonkey = z.adultMonkey;
     this->numMonkeybaby = z.numMonkeybaby;
+    
     this->ottersize = z.ottersize;
     this->se = new Sea_otter[z.ottersize] ();
     this->adultOtter = z.adultOtter;
     this->numOtterbaby = z.numOtterbaby;
+    
     this->slothsize = z.slothsize;
     this->sl = new Sloth[z.slothsize] ();
     this->adultSloth = z.adultSloth;

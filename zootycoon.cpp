@@ -8,6 +8,12 @@
  * *********************************************************************/
 #include <iostream>
 #include <time.h> //for time
+#include <ctime>
+#include <stdio.h>
+#include <iomanip>
+#include <string>
+#include <stdlib.h>
+
 #include "zoo.hpp"
 #include "animal.hpp"
 #include "monkey.hpp"
@@ -17,9 +23,12 @@
 using namespace std;
 
 int main(){
+    //random seed
     srand(time(0));
+    
     //zoo object.
     Zoo z;
+    
     //runs the game.
     z.run();
     
