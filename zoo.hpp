@@ -59,30 +59,14 @@ public:
     Zoo( const Zoo& z1 );
     void operator=( const Zoo& z );
     
-    //getters
-    int get_monkeysize() { return monkeysize; }
-    int get_ottersize() {return ottersize; }
-    int get_slothsize() {return slothsize; }
-    int get_bank() { return bank; }
-    int get_revenue() { return revenue; }
-    int get_days() { return days; }
-    
-    //setters
-    void set_bank(int x) { bank = x; }
-    void set_days(int x) { days = x; }
-    void set_revenue(int x) { revenue = x; }
-    void set_monkeysize(int x) { monkeysize = x; }
-    void set_ottersize(int x) { ottersize = x; }
-    void set_slothsize(int x) { slothsize = x; }
-    
     //actual game
     void run();
     
-    //special functions
-    void grow_animal();
-    int feed_animal();
-    void calculate_revenue();
-    void random_event1( int whichfood ); //would run normal random event if user fed normal amount of food
+    void grow_animal(); // ages animals one day
+    int feed_animal(); //minus cost to feed animals from bank
+    bool calculate_revenue(); //adds money to bank
+    
+    void random_eventregular( int whichfood ); //would run normal random event if user fed normal amount of food
     
     void random_eventcheap(); //will run one with odds of being sick higher
     void random_eventpremium(); //will run one with odds of not being sick higher
@@ -107,7 +91,7 @@ public:
     void welcome();
     
     //ends each day
-    bool endday();
+    void startday();
     
     //for when the user asks for a certain species.
     void asking_monkey();
@@ -116,6 +100,8 @@ public:
     
     //prints out error message
     void errormessage();
+    
+    bool day20event();
 };
 
 #endif

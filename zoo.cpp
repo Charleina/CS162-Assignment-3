@@ -12,7 +12,7 @@
  ** Function: Zoo
  ** Description: constructor
  ** Parameters: none
- ** Pre-Conditions:  needs to be called
+ ** Pre-Conditions: needs to be called
  ** Post-Conditions: intializes certain variables
  *********************************************************************/
 Zoo :: Zoo(){
@@ -129,35 +129,86 @@ void Zoo :: operator=(const Zoo& z){
 void Zoo :: run(){
     
     // will print welcome message and ask user for new animals.
-    welcome();
+    this->welcome();
     
-    /* will run through all functions written and stop when endday
+    /* will run through all functions written and stop when startday
      * function produces a false which means player wants to end
      * game. Otherwise the game will continue.
      */
     do
     {
-        grow_animal();
-        this->whichfood = feed_animal();
-        calculate_revenue();
-        random_event1( whichfood );
-        endofday = endday();
+        //ages animals
+        this->grow_animal();
+        
+        //start the day by asking if user wants animals
+        this->startday();
+        
+        //checks if bank account is empty or negative
+        if( this->bank <= 0)
+        {
+            cout << "It seems like your bank account is now either $0 or less the Zoo is now bankrupt GAME OVER" << endl << endl;
+            break;
+        }
+        
+        //feeds animals and also inputs a number corresponding to which food user chose
+        this->whichfood = this->feed_animal();
+        
+        //checks if bank account is empty or negative
+        if( this->bank <= 0)
+        {
+            cout << "It seems like your bank account is now either $0 or less the Zoo is now bankrupt GAME OVER" << endl << endl;
+            break;
+        }
+        
+        //runs the random event with the whichfood int that tells it which erandome event
+        this->random_eventregular( this->whichfood );
+        
+        //checks if bank account is empty or negative
+        if( this->bank <= 0)
+        {
+            cout << "It seems like your bank account is now either $0 or less the Zoo is now bankrupt GAME OVER" << endl << endl;
+            break;
+        }
+        
+        //add revenue to the bank account and then copies whether or not they continue to the boolean
+        this->endofday = this->calculate_revenue();
+        
+        //day 20 event
+        if(days == 20)
+        {
+            this->endofday = day20event();
+        }
+        
         //this will up the days so that when program continues day will be different.
-        set_days(this->days + 1);
+        this->days = this->days + 1;
         
     } while( this->endofday );
     
+    cout << "Your ending bank balance is: $" << this->bank << endl << endl;
     cout << "Thanks for playing!" << endl;
 }
 
 /*********************************************************************
  ** Function: grow_animal
- ** Description: will age all animals one day older
+ ** Description: will age all animals one day older and starts day
  ** Parameters: none
  ** Pre-Conditions: none
  ** Post-Conditions: none
  *********************************************************************/
 void Zoo :: grow_animal(){
+    cout << "Day " << this->days << " of " << this->nameofzoo << endl;
+    cout << endl;
+    
+    cout << setprecision(2) << fixed;
+    cout << "Current Balance in Bank: $" << this->bank << endl << endl;
+    
+    cout << "Monkey Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultMonkey << "/" << this->numMonkeybaby << endl;
+    
+    cout << "Sea otter Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultOtter << "/" << this->numOtterbaby << endl;
+    
+    cout << "Sloth Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultSloth << "/" << this->numSlothbaby << endl;
+    
+    cout << "Total number of animals in zoo "<< monkeysize + ottersize + slothsize << endl << endl << endl;
     
     // Monkeys
     if( monkeysize != 0 )
@@ -167,7 +218,14 @@ void Zoo :: grow_animal(){
             //storing new age first
             int age = m[i].get_age() + 1;
             this->m[i].set_age(age);
+            
+            if(m[i].get_age() == 30)
+            {
+                numMonkeybaby--;
+                adultMonkey++;
+            }
         }
+        
     }
     
     // Sea Otters
@@ -178,6 +236,13 @@ void Zoo :: grow_animal(){
             //storing new age first
             int age = se[i].get_age() + 1;
             this->se[i].set_age(age);
+            
+            if(se[i].get_age() == 30)
+            {
+                numOtterbaby--;
+                adultOtter++;
+            }
+            
         }
     }
     
@@ -189,6 +254,12 @@ void Zoo :: grow_animal(){
             //storing new age first
             int age = sl[i].get_age() + 1;
             this->sl[i].set_age(age);
+            if(sl[i].get_age() == 30)
+            {
+                numSlothbaby--;
+                adultSloth++;
+            }
+            
         }
     }
     cout << "Animals have been aged!" << endl << endl;
@@ -227,7 +298,7 @@ int Zoo :: feed_animal(){
     
     do
     {
-        cout << "Would you like to feed your animal regular version (base price is: $" << basefood << " , premium version (double the cost of normal but lower the chance of animals getting sick), or the cheap version (half the cost of normal and ups the chance of animals getting sick) of food? (regular: 1, premium: 2, cheap: 3)" << endl;
+        cout << "Would you like to feed your animal regular version (base price is: $" << basefood << "), premium version (double the cost of normal but lower the chance of animals getting sick), or the cheap version (half the cost of normal and ups the chance of animals getting sick) of food? (regular: 1, premium: 2, cheap: 3)" << endl;
         
         //for userinput
         int answer = 0;
@@ -244,18 +315,32 @@ int Zoo :: feed_animal(){
             {
                 //will find the actual cost to feed specifically monkey
                 double monkeyfood = m[0].get_mfood(basefood);
-                bank -= monkeysize * monkeyfood;
+                //feeding adult animals
+                bank -= adultMonkey * monkeyfood;
+                //changing the cost for baby animals
+                monkeyfood = monkeyfood * 2;
+                //feeding baby animals
+                bank -= numMonkeybaby * monkeyfood;
             }
             //feed sea otters
             if( ottersize != 0)
             {
+                //will find the actual cost to feed specifically monkey
                 double otterfood = se[0].get_ofood(basefood);
-                bank -= ottersize * otterfood;
+                //feeding adult animals
+                bank -= adultOtter * otterfood;
+                //changing the cost for baby animals
+                otterfood = otterfood * 2;
+                //feeding baby animals
+                bank -= numOtterbaby * otterfood;
             }
             //feed sloths
             if( slothsize != 0)
             {
-                bank -= slothsize * basefood;
+                //feeding adult animals
+                bank -= adultSloth * basefood;
+                //feeding baby animals
+                bank -= numSlothbaby * (basefood * 2);
             }
             cout << "Animals have been fed!" << endl << endl;
             return 1;
@@ -270,18 +355,32 @@ int Zoo :: feed_animal(){
             {
                 //will find the actual cost to feed specifically monkey
                 double monkeyfood = m[0].get_mfood(basefood);
-                bank -= monkeysize * monkeyfood;
+                //feeding adult animals
+                bank -= adultMonkey * monkeyfood;
+                //changing the cost for baby animals
+                monkeyfood = monkeyfood * 2;
+                //feeding baby animals
+                bank -= numMonkeybaby * monkeyfood;
             }
             //feed sea otters
             if( ottersize != 0)
             {
+                //will find the actual cost to feed specifically monkey
                 double otterfood = se[0].get_ofood(basefood);
-                bank -= ottersize * otterfood;
+                //feeding adult animals
+                bank -= adultOtter * otterfood;
+                //changing the cost for baby animals
+                otterfood = otterfood * 2;
+                //feeding baby animals
+                bank -= numOtterbaby * otterfood;
             }
             //feed sloths
             if( slothsize != 0)
             {
-                bank -= slothsize * basefood;
+                //feeding adult animals
+                bank -= adultSloth * basefood;
+                //feeding baby animals
+                bank -= numSlothbaby * (basefood * 2);
             }
             cout << "Animals have been fed!" << endl << endl;
             return 2;
@@ -296,18 +395,32 @@ int Zoo :: feed_animal(){
             {
                 //will find the actual cost to feed specifically monkey
                 double monkeyfood = m[0].get_mfood(basefood);
-                bank -= monkeysize * monkeyfood;
+                //feeding adult animals
+                bank -= adultMonkey * monkeyfood;
+                //changing the cost for baby animals
+                monkeyfood = monkeyfood * 2;
+                //feeding baby animals
+                bank -= numMonkeybaby * monkeyfood;
             }
             //feed sea otters
             if( ottersize != 0)
             {
+                //will find the actual cost to feed specifically monkey
                 double otterfood = se[0].get_ofood(basefood);
-                bank -= ottersize * otterfood;
+                //feeding adult animals
+                bank -= adultOtter * otterfood;
+                //changing the cost for baby animals
+                otterfood = otterfood * 2;
+                //feeding baby animals
+                bank -= numOtterbaby * otterfood;
             }
             //feed sloths
             if( slothsize != 0)
             {
-                bank -= slothsize * basefood;
+                //feeding adult animals
+                bank -= adultSloth * basefood;
+                //feeding baby animals
+                bank -= numSlothbaby * (basefood * 2);
             }
             cout << "Animals have been fed!" << endl << endl;
             return 3;
@@ -315,6 +428,7 @@ int Zoo :: feed_animal(){
         else
         {
             errormessage();
+            //changing the boolean to repeat loop
             validinput = false;
         }
     } while( !validinput );
@@ -328,7 +442,7 @@ int Zoo :: feed_animal(){
  ** Pre-Conditions: none
  ** Post-Conditions: none
  *********************************************************************/
-void Zoo :: calculate_revenue(){
+bool Zoo :: calculate_revenue(){
     //will hold age number
     int age = 0;
     
@@ -406,17 +520,45 @@ void Zoo :: calculate_revenue(){
             }
         }
     }
-    //cout << "added revenue" << endl << endl;
+    cout << "Revenue collected!" << endl << endl;
+    
+    //creating one to check for valid input
+    bool validinput = true;
+    
+    do
+    {
+        cout << "Would you like to continue playing? (y/n)" << endl;
+        
+        //for when the code circles through again due to bad input
+        validinput = true;
+        
+        
+        //created a string to hold user input
+        string answer;
+        cin >> answer;
+        
+        if(answer == "y")
+            return true;
+        
+        else if( answer == "n")
+            return false;
+        
+        else
+        {
+            errormessage();
+            validinput = false;
+        }
+    } while( !validinput );
 }
 
 /*********************************************************************
  ** Function: random_event
- ** Description: chooses a random event
+ ** Description: chooses a random event based off regular food
  ** Parameters: int whichfood
  ** Pre-Conditions: functions need to exist
  ** Post-Conditions: none
  *********************************************************************/
-void Zoo :: random_event1(int whichfood){
+void Zoo :: random_eventregular(int whichfood){
     
     //regular food random event
     if( whichfood == 1)
@@ -424,7 +566,7 @@ void Zoo :: random_event1(int whichfood){
         cout << "Today something special or horrible might happen!" << endl;
         //random number the fourth one is for nothing special to happen
         int random = rand() % 4 + 1;
-        cout << random << endl;
+        //cout << random << endl;
         //a random animal gets sick
         if(random == 1)
         {
@@ -459,7 +601,7 @@ void Zoo :: random_event1(int whichfood){
 
 /*********************************************************************
  ** Function: random_eventcheeap
- ** Description: chooses a random event
+ ** Description: chooses a random event bsaed off the sick function being more likely
  ** Parameters: none
  ** Pre-Conditions: functions need to exist
  ** Post-Conditions: none
@@ -468,7 +610,7 @@ void Zoo :: random_eventcheap(){
     cout << "Today something special or horrible might happen!" << endl;
     //random number the fourth one is for nothing special to happen
     int random = rand() % 6 + 1;
-    cout << random << endl;
+    //cout << random << endl;
     //a random animal gets sick
     if(random == 1 || random == 4 || random == 5)
     {
@@ -493,7 +635,7 @@ void Zoo :: random_eventcheap(){
 
 /*********************************************************************
  ** Function: random_eventpremium
- ** Description: chooses a random event
+ ** Description: chooses a random event base off the sick function being unlikely
  ** Parameters: none
  ** Pre-Conditions: functions need to exist
  ** Post-Conditions: none
@@ -502,7 +644,7 @@ void Zoo :: random_eventpremium(){
     cout << "Today something special or horrible might happen!" << endl;
     //random number the fourth one is for nothing special to happen
     int random = rand() % 8 + 1;
-    cout << random << endl;
+    //cout << random << endl;
     //a random animal gets sick
     if(random == 1)
     {
@@ -562,10 +704,10 @@ void Zoo :: addmonkeyarray(int before){
 void Zoo :: add_monkey(int x){
     //cout << " monkey size right now : " << this->monkeysize << endl;
     //gets the current size and places it in this int
-    int before = this->get_monkeysize();
+    int before = this->monkeysize;
     
     //changes the size
-    this->set_monkeysize(before + x);
+    this->monkeysize = before + x;
     
     //changes the size of array which also adds a new animal
     this->addmonkeyarray(before);
@@ -582,10 +724,10 @@ void Zoo :: add_monkey(int x){
  *********************************************************************/
 void Zoo :: take_monkey(int index){
     //gets the current size and places it in this int
-    int before = this->get_monkeysize();
+    int before = this->monkeysize;
     
     //changes the size
-    this->set_monkeysize(before - 1);
+    this->monkeysize = before - 1;
     
     //creates a dynamically allocated array to store monkeys.
     Monkey * temp = new Monkey[monkeysize];
@@ -648,10 +790,10 @@ void Zoo :: add_otter(int x){
     //cout << " otter size rn: " << this->ottersize << endl;;
     
     //gets the current size and places it in this int
-    int before = this->get_ottersize();
+    int before = this->ottersize;
     
     //changes the size
-    this->set_ottersize(before + x);
+    this->ottersize = before + x;
     
     //changes the size of array which also adds a new animal
     this->addotterarray(before);
@@ -668,10 +810,10 @@ void Zoo :: add_otter(int x){
  *********************************************************************/
 void Zoo :: take_otter(int index){
     //gets the current size and places it in this int
-    int before = this->get_ottersize();
+    int before = this->ottersize;
     
     //changes the size
-    this->set_ottersize(before - 1);
+    this->ottersize = before - 1;
     
     //creates a dynamically allocated array to store otters.
     Sea_otter * temp = new Sea_otter[ottersize];
@@ -732,18 +874,18 @@ void Zoo :: addslotharray(int before){
  ** Post-Conditions: none
  *********************************************************************/
 void Zoo :: add_sloth(int x){
-    cout << " sloth size right now : " << this->slothsize << endl;
+    //cout << " sloth size right now : " << this->slothsize << endl;
     
     //gets the current size and places it in this int
-    int before = this->get_slothsize();
+    int before = this->slothsize;
     
     //changes the size
-    this->set_slothsize(before + x);
+    this->slothsize = before + x;
     
     //changes the size of array which also adds a new animal
     this->addslotharray(before);
     
-    cout << "new sloth size is: " << this->slothsize << endl;
+    //cout << "new sloth size is: " << this->slothsize << endl;
 }
 
 /*********************************************************************
@@ -755,10 +897,10 @@ void Zoo :: add_sloth(int x){
  *********************************************************************/
 void Zoo :: take_sloth(int index){
     //gets the current size and places it in this int
-    int before = this->get_slothsize();
+    int before = this->slothsize;
     
     //changes the size
-    this->set_slothsize(before - 1);
+    this->slothsize = before - 1;
     
     //creates a dynamically allocated array to store sloths.
     Sloth * temp = new Sloth[slothsize];
@@ -813,8 +955,9 @@ void Zoo :: sick(){
             if(age >= 30)
             {
                 cout << "Oh no... one of your monkeys has become ill!" << endl << endl;
-                cout << "A fee of $7,500 will be charged to your account, if your account does not have enough money to pay the $7,500 then this monkey will be removed from the zoo." << endl;
-                if( get_bank() >= 7500 )
+                
+                cout << "A fee of $7,500 will be charged to your account, if your account does not have enough money to pay the $7,500 then this monkey will be removed from the zoo." << endl << endl;
+                if( this->bank >= 7500 )
                 {
                     this->bank -= 7500;
                     cout << "your bank account balance is now $" << bank << " after curing this monkey of sickness." << endl;
@@ -829,9 +972,10 @@ void Zoo :: sick(){
             else
             {
                 cout << "Oh no... one of your baby monkeys has become ill!" << endl << endl;
-                cout << "A fee of $15,000 will be charged to your account, if your account does not have enough money to pay the $15,000 then this baby monkey will be removed from the zoo." << endl;
                 
-                if( get_bank() >= 15000 )
+                cout << "A fee of $15,000 will be charged to your account, if your account does not have enough money to pay the $15,000 then this baby monkey will be removed from the zoo." << endl << endl;
+                
+                if( this->bank >= 15000 )
                 {
                     this->bank -= 15000;
                     cout << "Your bank account balance is now $" << bank << " after curing this monkey of sickness." << endl;
@@ -861,9 +1005,10 @@ void Zoo :: sick(){
             if(age >= 30)
             {
                 cout << "Oh no... one of your Sea otters has become ill!" << endl << endl;
-                cout << "A fee of $2,500 will be charged to your account, if your account does not have enough money to pay the $2,500 then this sea otter will be removed from the zoo." << endl;
                 
-                if( get_bank() >= 2500 )
+                cout << "A fee of $2,500 will be charged to your account, if your account does not have enough money to pay the $2,500 then this sea otter will be removed from the zoo." << endl << endl;
+                
+                if( this->bank >= 2500 )
                 {
                     this->bank -= 2500;
                     cout << "your bank account balance is now $" << bank << " after curing this sea otter of sickness." << endl;
@@ -878,9 +1023,10 @@ void Zoo :: sick(){
             else
             {
                 cout << "Oh no... one of your baby Sea otters has become ill!" << endl << endl;
-                cout << "A fee of $5,000 will be charged to your account, if your account does not have enough money to pay the $5,000 then this baby sea otter will be removed from the zoo." << endl;
                 
-                if( get_bank() >= 5000 )
+                cout << "A fee of $5,000 will be charged to your account, if your account does not have enough money to pay the $5,000 then this baby sea otter will be removed from the zoo." << endl << endl;
+                
+                if( this->bank >= 5000 )
                 {
                     this->bank -= 5000;
                     cout << "your bank account balance is now $" << bank << " after curing this sea otter of sickness." << endl;
@@ -908,9 +1054,10 @@ void Zoo :: sick(){
             if(age >= 30)
             {
                 cout << "Oh no... one of your sloths has become ill!" << endl << endl;
-                cout << "A fee of $1,000 will be charged to your account, if your account does not have enough money to pay the $1,000 then this sloth will be removed from the zoo." << endl;
                 
-                if( get_bank() >= 1000 )
+                cout << "A fee of $1,000 will be charged to your account, if your account does not have enough money to pay the $1,000 then this sloth will be removed from the zoo." << endl << endl;
+                
+                if( this->bank >= 1000 )
                 {
                     this->bank -= 1000;
                     cout << "your bank account balance is now $" << bank << " after curing this sloth of sickness." << endl;
@@ -925,8 +1072,9 @@ void Zoo :: sick(){
             else
             {
                 cout << "Oh no... one of your baby sloths has become ill!" << endl << endl;
-                cout << "A fee of $2,000 will be charged to your account, if your account does not have enough money to pay the $2,000 then this baby sloth will be removed from the zoo." << endl;
-                if( get_bank() >= 2000 )
+                
+                cout << "A fee of $2,000 will be charged to your account, if your account does not have enough money to pay the $2,000 then this baby sloth will be removed from the zoo." << endl << endl;
+                if( this->bank >= 2000 )
                 {
                     this->bank -= 2000;
                     cout << "your bank account balance is now $" << bank << " after curing this sloth of sickness." << endl;
@@ -1009,11 +1157,12 @@ void Zoo :: new_baby(){
                     adultspecies = true;
                     
                     cout << "Congratulations! A new Monkey has been born!" << endl;
+                    
                     cout << "A baby animal will eventually grow up and become an adult but thats not going to happen for a while..." << endl << endl;
                     //adds a new mokey
                     this->add_monkey(1);
                     //getting the index of last monkey in array which would be the new monkey
-                    int index = get_monkeysize()-1;
+                    int index = monkeysize-1;
                     //upping the amount of babies
                     this->numMonkeybaby++;
                     //maaking new monkey into baby
@@ -1023,7 +1172,7 @@ void Zoo :: new_baby(){
             }
         }
         else
-            cout << "Unlucky you! Baby monkeys could have been born today but you currently have no monkeys or no adult monkeys in your zoo... oh well." << endl << endl;
+            cout << "Unlucky you! Baby monkeys could have been born today but you currently have no monkeys or no adult monkeys over 3 years old in your zoo... oh well." << endl << endl;
     }
     // sea otter has two babies.
     else if( randomspecies == 2 )
@@ -1039,11 +1188,12 @@ void Zoo :: new_baby(){
                     adultspecies = true;
                     
                     cout << "Congratulations! Two new Sea otters has been born!" << endl << endl;
+                    
                     cout << "A baby animal will eventually grow up and become an adult but thats not going to happen for a while..." << endl << endl;
                     //addings two new otters
                     this->add_otter(2);
                     //just the index of the last animal.
-                    int index = get_ottersize()-1;
+                    int index = ottersize-1;
                     //upping the amount of babies
                     this->numOtterbaby += 2;
                     //making new sea otters into babies.
@@ -1054,7 +1204,7 @@ void Zoo :: new_baby(){
             }
         }
         else
-            cout << "Unlucky you! Baby sea otters could have been born today but you currently have no sea otters or no adult sea otters in your zoo... oh well." << endl << endl;
+            cout << "Unlucky you! Baby sea otters could have been born today but you currently have no sea otters or no adult sea otters over 3 years old in your zoo... oh well." << endl << endl;
     }
     //sloth has three babiies.
     else
@@ -1070,11 +1220,12 @@ void Zoo :: new_baby(){
                     adultspecies = true;
                     
                     cout << "Congratulations! Three new Sloths has been born!" << endl << endl;
+                    
                     cout << "A baby animal will eventually grow up and become an adult but thats not going to happen for a while..." << endl << endl;
                     //adding three new sloths
                     this->add_sloth(3);
                     //just the index of the last animal
-                    int index = get_slothsize() - 1;
+                    int index = slothsize - 1;
                     //upping amount of babies
                     this->numSlothbaby += 3;
                     //making he new sloths into babies.
@@ -1086,7 +1237,7 @@ void Zoo :: new_baby(){
             }
         }
         else
-            cout << "Unlucky you! Baby sloths could have been born today but you currently have no sloths or no adult sloths in your zoo... oh well." << endl << endl;
+            cout << "Unlucky you! Baby sloths could have been born today but you currently have no sloths or no adult sloths over 3 years old in your zoo... oh well." << endl << endl;
     }
     
 }
@@ -1103,111 +1254,39 @@ void Zoo :: welcome(){
     cout << "Welcome to the Zoo! You are now in pocession of an emoty zoo with a Monkey exhibit, Sea otter exhibit, and Sloth exhibit. You will have exaclty $100,000 dollars in your bank account!" << endl << endl;
     
     //explaining what happens each day
-    cout << "In this game, everyday your animals will grow one day in age, in the beginning of the day they will be fed food, and at the end they will have made revenue (which goes into your bank account)." << endl << endl;
+    cout << "In this game, everyday your animals will grow one day in age, after the beginning of the day they will be fed food, and at the end they will have made revenue (which goes into your bank account)." << endl << endl;
     
     //explaining the food costs.
-    cout << "There are three different types of food. First being the regular type which costs the same as the basefood per day. The base food cost changes randomly to a number 75% to 125% of the cost from the day before. On the first day the base food will start out as $50. Second is the premium type which costs twice as much as regular food for all animals, but it reduces the probability of sickness by half. Third being the cheap type which costs half as much as regular food for all animals, but it doubles the probability that an animal will get sick. " << endl << endl;
+    cout << "There are three different types of food. The base food cost changes randomly to a number 75% to 125% of the cost from the day before. On the first day the base food will start out as $50." << endl << endl;
     
-    //starting the day
-    cout << "Today is the first day!" << endl << endl;
+    cout << "First being the regular type which costs the same as the basefood per day." << endl << endl;
     
-    cout << "Name your Zoo below: " << endl;
+    cout << "Second is the premium type which costs twice as much as regular food for all animals, but it reduces the probability of sickness by half." << endl << endl;
+    
+    cout << "Third being the cheap type which costs half as much as regular food for all animals, but it doubles the probability that an animal will get sick. " << endl << endl;
+    
+    cout << "Name your Zoo below: (it can only be one word)" << endl;
     
     //will hold user input of name of zoo
-    string nameofzoo = "";
-    cin >> nameofzoo;
+    cin >> this->nameofzoo;
     
-    cout << "That name is interesting! Your zoo will now be called " << this->nameofzoo << endl;
+    cout << "That name is interesting! Your zoo will now be called " << this->nameofzoo << endl << endl;
     
-    cout << "monkey: " << this->monkeysize << " sloth: " << this->slothsize << " otter: " << this->ottersize << endl;
-    
-    /* created a boolean so i can circle back to the first if statement if the input
-     * is wrong
-     */
-    bool validinput = true;
-    
-    //will circle through the if's again if the boolean error returns false
-    do
-    {
-        cout << "Would you like to buy any new animals today? (y or n)" << endl;
-        
-        //for when it circles through again to make sure the variable changes to true.
-        validinput = true;
-        
-        //created a string to take a y or n for whether or not user wants new animals.
-        string newanimal = "";
-        cin >> newanimal;
-        
-        if( newanimal == "y")
-        {
-            
-            /* created a boolean so i can circle back to the first if statement if the
-             * input was wrong.
-             */
-            bool error = true;
-            
-            //will circle through the if's again if the boolean error returns false
-            do
-            {
-                cout << "You can choose one species of animals ( Monkeys $15,000, Sea otters $5,000, or Sloths $2,000) and buy 1 or 2 animals of that species. Please type in which species you want to buy from: ('Monkey'/'Otter'/'Sloth') " << endl;
-                
-                //for when the code circles through again due to bad input
-                error = true;
-                
-                //created a string to take user input for what kind of species they want
-                string species = "";
-                cin >> species;
-                
-                if ( species == "Monkeys" || species == "monkeys" || species == "monkey"  || species == "Monkey" )
-                    this->asking_monkey();
-                
-                else if( species == "otter" || species == "otters" || species == "Otters" || species == "Otter" )
-                    this->asking_otter();
-                
-                else if( species == "Sloth" || species == "sloth" || species == "sloths" || species == "Sloths" )
-                    this->asking_sloth();
-                
-                else
-                {
-                    errormessage();
-                    error = false;
-                }
-                
-            } while( !error );
-            //end of 2nd do
-        }
-        else if( newanimal == "n")
-            cout << "You have chosen to not add any new animals today." << endl << endl;
-        else
-        {
-            validinput = false;
-            errormessage();
-        }
-    } while( !validinput );
-    //end of 1st do
+    //cout << "monkey: " << this->monkeysize << " sloth: " << this->slothsize << " otter: " << this->ottersize << endl;
     
     cout << "Have fun! Don't go bankrupt or else the game will end!" << endl << endl;
 }
 
 /*********************************************************************
- ** Function: endday
+ ** Function: startday
  ** Description: will end each day and return a boolean that is true is the user wants to continue and false if the user wants to quit
  ** Parameters: none
  ** Pre-Conditions: functions need to exist
  ** Post-Conditions: none
  *********************************************************************/
-bool Zoo :: endday(){
-    cout << "Day " << this->days << " of " << this->nameofzoo << endl;
-    cout << endl;
-    cout << setprecision(2) << fixed;
-    cout << "Balance in Bank: $" << this->bank << endl;
+void Zoo :: startday(){
     
-    cout << "Monkey Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultMonkey << "/" << this->numMonkeybaby << endl;
-    cout << "Sea otter Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultOtter << "/" << this->numOtterbaby << endl;
-    cout << "Sloth Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultSloth << "/" << this->numSlothbaby << endl;
-    cout << "Total number of animals in zoo "<< monkeysize + ottersize + slothsize << endl << endl;
-    
-    cout << "monkey: " << this->monkeysize << " sloth: " << this->slothsize << " otter: " << this->ottersize << endl;
+    //cout << "monkey: " << this->monkeysize << " sloth: " << this->slothsize << " otter: " << this->ottersize << endl;
     
     /* created a boolean so i can circle back to the first if statement if the input
      * is wrong
@@ -1236,7 +1315,7 @@ bool Zoo :: endday(){
             //will circle through the if's again if the boolean error returns false
             do
             {
-                cout << "You can choose one species of animals ( Monkeys $15,000, Sea otters $5,000, or Sloths $2,000) and buy 1 or 2 animals of that species. Please type in which species you want to buy from: ('Monkey'/'Otter'/'Sloth') " << endl;
+                cout << "You can choose one species of animals ( Monkeys: $15,000, Sea otters: $5,000, or Sloths: $2,000) and buy 1 or 2 animals of that species. Please type in which species you want to buy from: ('Monkey'/'Otter'/'Sloth') " << endl;
                 
                 //for when the code circles through again due to bad input
                 error = true;
@@ -1273,37 +1352,12 @@ bool Zoo :: endday(){
     } while( !validinput );
     //end of 1st do
     
-    //reusing the boolean from before
-    validinput = true;
-    
-    do
-    {
-        cout << "Would you like to continue playing? (y/n)" << endl;
-        
-        //for when the code circles through again due to bad input
-        validinput = true;
-        
-        
-        //created a string to hold user input
-        string answer;
-        cin >> answer;
-        
-        if(answer == "y")
-            return true;
-        else if( answer == "n")
-            return false;
-        else
-        {
-            errormessage();
-            validinput = false;
-        }
-    } while( !validinput );
     
 }
 
 /*********************************************************************
  ** Function: asking_monkey
- ** Description: is called when the user inputs they want monkeys in welcome or endday
+ ** Description: is called when the user inputs they want monkeys in welcome or startday
  ** Parameters: none
  ** Pre-Conditions: functions need to exist
  ** Post-Conditions: add monkeys to zoo
@@ -1317,7 +1371,10 @@ void Zoo :: asking_monkey(){
     //will circle through the if's again if the boolean error returns false
     do
     {
-        cout << "You have chosen Monkey, how many monkeys would you like? Remember that Monkeys normal food cost would be 4 times the basefood cost and if and when a monkey gets sick it would cost half of its intial cost to nurse back ($7,500). A monkey makes 10% of its intial cost in revenue per day ($1,500). Please enter 1 or 2: " << endl;
+        cout << "You have chosen Monkey." << endl << endl;
+        cout<< "Remember that Monkeys normal food cost would be 4 times the basefood cost and if and when a monkey gets sick it would cost half of its intial cost to nurse back ($7,500). A monkey makes 10% of its intial cost in revenue per day ($1,500)." << endl << endl;
+        
+        cout << "How many monkeys would you like? Please enter 1 or 2: " << endl;
         //for when the code circles through again due to bad input
         error2 = true;
         
@@ -1370,7 +1427,10 @@ void Zoo :: asking_otter(){
     //will circle through the if's again if the boolean error returns false
     do
     {
-        cout << "You have chosen Sea otters, how many sea otters would you like? Remember that Sea otters normal food cost would be 2 times the basefood cost and if and when a sea otter gets sick it would cost half of its intial cost to nurse back ($2,500). A sea otter makes 5% of its intial cost in revenue per day ($250). Please enter 1 or 2: " << endl;
+        cout << "You have chosen Sea otters." << endl << endl;
+        cout << "Remember that Sea otters normal food cost would be 2 times the basefood cost and if and when a sea otter gets sick it would cost half of its intial cost to nurse back ($2,500). A sea otter makes 5% of its intial cost in revenue per day ($250)." << endl << endl;
+        
+        cout << "How many sea otters would you like? Please enter 1 or 2: " << endl;
         //for when the code circles through again due to bad input
         error2 = true;
         
@@ -1423,7 +1483,10 @@ void Zoo :: asking_sloth(){
     //will circle through the if's again if the boolean error returns false
     do
     {
-        cout << "You have chosen Sloth, how many sloths would you like? Remember that Sloths normal food cost would be the basefood cost and if and when a sloth gets sick it would cost half of its intial cost to nurse back ($1,000). A sloth makes 5% of its intial cost in revenue per day ($100). Please enter 1 or 2: " << endl;
+        cout << "You have chosen Sloth." << endl << endl;
+        cout << "Remember that Sloths normal food cost would be the basefood cost and if and when a sloth gets sick it would cost half of its intial cost to nurse back ($1,000). A sloth makes 5% of its intial cost in revenue per day ($100)." << endl << endl;
+        
+        cout << "How many sloths would you like? Please enter 1 or 2: " << endl;
         
         //for when the code circles through again due to bad input
         error2 = true;
@@ -1473,18 +1536,46 @@ void Zoo :: errormessage(){
     cout << "What you have entered is incorrect please try again." << endl << endl;
 }
 
-/*bool Zoo :: validinputstring(string in){
- if( in == ""){
- return false;
- }
- for( char c : in)
- {
- int ascii = int(c);
- if( ascii < 48 || ascii > 57)
- {
- return false;
- }
- }
- return true;
- }
- */
+/*********************************************************************
+ ** Function: day20event
+ ** Description: will make a fire in the zoo and ask user if they are willing to paay 100,000 to save the zoo
+ ** Parameters: none
+ ** Pre-Conditions: none
+ ** Post-Conditions: returns aa boolean for what user did
+ *********************************************************************/
+bool Zoo :: day20event(){
+    
+    bool continueday = true;
+    
+    cout << "One of the visitors today set the zoo on fire by accident!!!! The zoo has burned mostly down and rescue workers have saved all the animals!" << endl;
+    //boolean for the do while
+    bool error = true;
+    
+    do{
+        cout << "Do you want to save this zoo and continue? It will cost $100,000 to fix the zoo and bring it back to normal! (y/n)" << endl;
+        
+        string answer;
+        cin >> answer;
+        
+        //removes the money and continues the game
+        if( answer == "y")
+        {
+            bank -= 100000;
+            continueday = true;
+        }
+        
+        else if(answer == "n")
+        {
+            continueday = false;
+            break;
+        }
+        //not valid input
+        else
+        {
+            this->errormessage();
+            error = false;
+        }
+    } while( !error );
+    
+    return continueday;
+}
