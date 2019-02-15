@@ -179,6 +179,7 @@ void Zoo :: run(){
             this->endofday = day20event();
         }
         
+        //win game
         if( bank >= 1000000)
         {
             cout << "Congratulations!!!!!! You have beat the game and made $1,000,000 or more! Below is what you are ending the game with: " << endl;
@@ -190,6 +191,8 @@ void Zoo :: run(){
             cout << "Sloth Population: (adult(age 30+ days)/baby(age 0 - 30 days)) " << this->adultSloth << "/" << this->numSlothbaby << endl;
             
             cout << "Total number of animals in zoo "<< monkeysize + ottersize + slothsize << endl << endl << endl;
+            //to end game
+            endofday = false;
         }
         
         //this will up the days so that when program continues day will be different.
