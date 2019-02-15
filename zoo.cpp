@@ -179,12 +179,27 @@ void Zoo :: run(){
             this->endofday = day20event();
         }
         
+        if( bank >= 1000000)
+        {
+            cout << "Congratulations!!!!!! You have beat the game and made $1,000,000 or more! Below is what you are ending the game with: " << endl;
+
+            cout << "Monkey Population: (adult(age 30+ days)/baby(age 0 - 30 days)) " << this->adultMonkey << "/" << this->numMonkeybaby << endl;
+            
+            cout << "Sea otter Population: (adult(age 30+ days)/baby(age 0 - 30 days)) " << this->adultOtter << "/" << this->numOtterbaby << endl;
+            
+            cout << "Sloth Population: (adult(age 30+ days)/baby(age 0 - 30 days)) " << this->adultSloth << "/" << this->numSlothbaby << endl;
+            
+            cout << "Total number of animals in zoo "<< monkeysize + ottersize + slothsize << endl << endl << endl;
+        }
+        
         //this will up the days so that when program continues day will be different.
         this->days = this->days + 1;
         
     } while( this->endofday );
     
+    cout << setprecision(2) << fixed;
     cout << "Your ending bank balance is: $" << this->bank << endl << endl;
+    
     cout << "Thanks for playing!" << endl;
 }
 
@@ -202,11 +217,11 @@ void Zoo :: grow_animal(){
     cout << setprecision(2) << fixed;
     cout << "Current Balance in Bank: $" << this->bank << endl << endl;
     
-    cout << "Monkey Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultMonkey << "/" << this->numMonkeybaby << endl;
+    cout << "Monkey Population: (adult(age 30+ days)/baby(age 0 - 30 days)) " << this->adultMonkey << "/" << this->numMonkeybaby << endl;
     
-    cout << "Sea otter Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultOtter << "/" << this->numOtterbaby << endl;
+    cout << "Sea otter Population: (adult(age 30+ days)/baby(age 0 - 30 days)) " << this->adultOtter << "/" << this->numOtterbaby << endl;
     
-    cout << "Sloth Population: (adult(age 1095+ days)/baby(age 0 - 30 days)) " << this->adultSloth << "/" << this->numSlothbaby << endl;
+    cout << "Sloth Population: (adult(age 30+ days)/baby(age 0 - 30 days)) " << this->adultSloth << "/" << this->numSlothbaby << endl;
     
     cout << "Total number of animals in zoo "<< monkeysize + ottersize + slothsize << endl << endl << endl;
     
