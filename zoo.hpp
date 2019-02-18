@@ -29,6 +29,7 @@ private:
     double basefood; //base cost of food
     int whichfood; //for deciding which random even occurs depending on food
     string nameofzoo; //for name of zoo
+    bool horrible;
     
     Monkey* m;
     //total monkeys
@@ -101,7 +102,11 @@ public:
     //prints out error message
     void errormessage();
     
-    bool day20event();
+    //void day20event();
+    bool day30event();
+    //void scienceexperiment();
+    
+    void win();
 };
 
 #endif
