@@ -62,7 +62,7 @@ Zoo :: ~Zoo(){
  ** Description: copy constructor
  ** Parameters: const Zoo& z1
  ** Pre-Conditions: variable needs to exist
- ** Post-Conditions:
+ ** Post-Conditions: Initialize one object from another of the same type
  *********************************************************************/
 Zoo :: Zoo(const Zoo& z1){
     this->bank = z1.bank;
@@ -97,7 +97,7 @@ Zoo :: Zoo(const Zoo& z1){
  ** Description: overload operator
  ** Parameters: const Zoo& z
  ** Pre-Conditions: variable needs to exist
- ** Post-Conditions:
+ ** Post-Conditions: makes sure = can set objects equal to each other
  *********************************************************************/
 void Zoo :: operator=(const Zoo& z){
     this->bank = z.bank;
@@ -182,6 +182,7 @@ void Zoo :: run(){
         //add revenue to the bank account and then copies whether or not they continue to the boolean
         this->endofday = this->calculate_revenue();
         
+        
         //day 30 event
         if(days == 30)
             this->endofday = day30event();
@@ -209,8 +210,8 @@ void Zoo :: run(){
  ** Function: grow_animal
  ** Description: will age all animals one day older and starts day
  ** Parameters: none
- ** Pre-Conditions: none
- ** Post-Conditions: none
+ ** Pre-Conditions: variables need to exist
+ ** Post-Conditions: will age all animals if they exist
  *********************************************************************/
 void Zoo :: grow_animal(){
     cout << "Day " << this->days << " of " << this->nameofzoo << endl;
@@ -286,7 +287,7 @@ void Zoo :: grow_animal(){
  ** Function: feed_animal
  ** Description: will change basefood to a random base cost of 75%-125% of the basefood from the day before.
  ** Parameters: none
- ** Pre-Conditions: none
+ ** Pre-Conditions: variables need to exist
  ** Post-Conditions: returns int for which food the user asked for.
  *********************************************************************/
 int Zoo :: feed_animal(){
@@ -457,8 +458,8 @@ int Zoo :: feed_animal(){
  ** Function: calculate_revenue
  ** Description: will add any revenue made from any animal of that day
  ** Parameters: none
- ** Pre-Conditions: none
- ** Post-Conditions: none
+ ** Pre-Conditions: bank needs to exist
+ ** Post-Conditions: adds the revenue from animals into bank
  *********************************************************************/
 bool Zoo :: calculate_revenue(){
     //will hold age number
@@ -574,7 +575,7 @@ bool Zoo :: calculate_revenue(){
  ** Description: chooses a random event based off regular food
  ** Parameters: int whichfood
  ** Pre-Conditions: functions need to exist
- ** Post-Conditions: none
+ ** Post-Conditions: will randomly call an event or call the other functions depending on food type
  *********************************************************************/
 void Zoo :: random_eventregular(int whichfood){
     
@@ -622,7 +623,7 @@ void Zoo :: random_eventregular(int whichfood){
  ** Description: chooses a random event bsaed off the sick function being more likely
  ** Parameters: none
  ** Pre-Conditions: functions need to exist
- ** Post-Conditions: none
+ ** Post-Conditions: will randomly call an event
  *********************************************************************/
 void Zoo :: random_eventcheap(){
     cout << "Today something special or horrible might happen!" << endl;
@@ -656,7 +657,7 @@ void Zoo :: random_eventcheap(){
  ** Description: chooses a random event base off the sick function being unlikely
  ** Parameters: none
  ** Pre-Conditions: functions need to exist
- ** Post-Conditions: none
+ ** Post-Conditions: randomly call an event
  *********************************************************************/
 void Zoo :: random_eventpremium(){
     cout << "Today something special or horrible might happen!" << endl;
@@ -691,7 +692,7 @@ void Zoo :: random_eventpremium(){
  ** Description: increases monkey array x amt
  ** Parameters: int before
  ** Pre-Conditions: variable needs to exist
- ** Post-Conditions: none
+ ** Post-Conditions: will change the array size for monkey adding new monkeys
  *********************************************************************/
 void Zoo :: addmonkeyarray(int before){
     
@@ -717,7 +718,7 @@ void Zoo :: addmonkeyarray(int before){
  ** Description: adds x amt of monkeys to monkey array
  ** Parameters: int x
  ** Pre-Conditions: variable needs to exist
- ** Post-Conditions: none
+ ** Post-Conditions: will add a certain amount of monkeys to array
  *********************************************************************/
 void Zoo :: add_monkey(int x){
     //cout << " monkey size right now : " << this->monkeysize << endl;
@@ -737,8 +738,8 @@ void Zoo :: add_monkey(int x){
  ** Function: take_monkey
  ** Description: takes 1 monkey from monkey array
  ** Parameters: none
- ** Pre-Conditions: none
- ** Post-Conditions: none
+ ** Pre-Conditions: monkey array and variables need to exist has to have at least one monkey in array
+ ** Post-Conditions: will take away a specific monkey
  *********************************************************************/
 void Zoo :: take_monkey(int index){
     //gets the current size and places it in this int
@@ -775,11 +776,11 @@ void Zoo :: take_monkey(int index){
 }
 
 /*********************************************************************
- ** Function: addmonkeyarray
- ** Description: increases monkey array x amt
+ ** Function: addotterarray
+ ** Description: increases otter array x amt
  ** Parameters: int before
- ** Pre-Conditions: variable needs to exist
- ** Post-Conditions: none
+ ** Pre-Conditions: variable needs to exist and array
+ ** Post-Conditions: will change the array size for sea otter
  *********************************************************************/
 void Zoo :: addotterarray(int before){
     //creates a dynamically allocated array to store ages.
@@ -803,8 +804,8 @@ void Zoo :: addotterarray(int before){
  ** Function: add_otter
  ** Description: will add otter to otter array
  ** Parameters: int x
- ** Pre-Conditions: variable needs to exist
- ** Post-Conditions: none
+ ** Pre-Conditions: variable needs to exist and array and function
+ ** Post-Conditions: will add a certain amount of otters to array
  *********************************************************************/
 void Zoo :: add_otter(int x){
     //cout << " otter size rn: " << this->ottersize << endl;;
@@ -825,8 +826,8 @@ void Zoo :: add_otter(int x){
  ** Function: take_otter
  ** Description: takes one otter out
  ** Parameters: none
- ** Pre-Conditions: none
- ** Post-Conditions: none
+ ** Pre-Conditions: array, functions, and variables need to exist must be at least one otter in array
+ ** Post-Conditions: will ttake a way a specific otter in otter array
  *********************************************************************/
 void Zoo :: take_otter(int index){
     //gets the current size and places it in this int
@@ -867,8 +868,8 @@ void Zoo :: take_otter(int index){
  ** Function: addslotharray
  ** Description: increases monkey array x amt
  ** Parameters: int before
- ** Pre-Conditions: variable needs to exist
- ** Post-Conditions: none
+ ** Pre-Conditions: variable, array, and functions needs to exist
+ ** Post-Conditions: will change sloth array size therefore creating new sloths
  *********************************************************************/
 void Zoo :: addslotharray(int before){
     //creates a dynamically allocated array to store ages.
@@ -893,7 +894,7 @@ void Zoo :: addslotharray(int before){
  ** Description: will add a sloth to the sloth array
  ** Parameters: int x
  ** Pre-Conditions: variable needs to exist
- ** Post-Conditions: none
+ ** Post-Conditions: will add a certain amount of sloths
  *********************************************************************/
 void Zoo :: add_sloth(int x){
     //cout << " sloth size right now : " << this->slothsize << endl;
@@ -914,8 +915,8 @@ void Zoo :: add_sloth(int x){
  ** Function: add_sloth
  ** Description: takes one sloth
  ** Parameters: none
- ** Pre-Conditions: none
- ** Post-Conditions: none
+ ** Pre-Conditions: functions, variables, and array need to exdist also there must be at least one sloth in array
+ ** Post-Conditions: will take away a specific sloth
  *********************************************************************/
 void Zoo :: take_sloth(int index){
     //gets the current size and places it in this int
@@ -956,8 +957,8 @@ void Zoo :: take_sloth(int index){
  ** Function: sick
  ** Description: will choose a random animal to make 'sick' and then print out the cost and check if user has enough money in.
  ** Parameters: none
- ** Pre-Conditions: functions need to exist
- ** Post-Conditions: none
+ ** Pre-Conditions: functions and variables need to exist
+ ** Post-Conditions: will either remove money or animals from user
  *********************************************************************/
 void Zoo :: sick(){
     //chooses a random species
@@ -1157,7 +1158,7 @@ void Zoo :: extra_revenue(){
  ** Function: new_baby
  ** Description: will randomly choose a species and check for adults in that species and then add a new animal (or more depending on which species) of that species.
  ** Parameters: none
- ** Pre-Conditions: none
+ ** Pre-Conditions: variables, functions, and array need to exist
  ** Post-Conditions: new baby species added
  *********************************************************************/
 void Zoo :: new_baby(){
@@ -1311,8 +1312,8 @@ void Zoo :: welcome(){
  ** Function: startday
  ** Description: will end each day and return a boolean that is true is the user wants to continue and false if the user wants to quit
  ** Parameters: none
- ** Pre-Conditions: functions need to exist
- ** Post-Conditions: none
+ ** Pre-Conditions: functions, variables, and arrays need to exist
+ ** Post-Conditions: adds new animals if user wants
  *********************************************************************/
 void Zoo :: startday(){
     
@@ -1571,7 +1572,7 @@ void Zoo :: errormessage(){
  ** Function: day30event
  ** Description: will make a fire in the zoo and ask user if they are willing to paay 100,000 to save the zoo
  ** Parameters: none
- ** Pre-Conditions: none
+ ** Pre-Conditions: needs to be day 30
  ** Post-Conditions: returns aa boolean for what user did
  *********************************************************************/
 bool Zoo :: day30event(){
@@ -1647,4 +1648,3 @@ void Zoo :: win(){
     
     cout << "Total number of animals in zoo "<< monkeysize + ottersize + slothsize << endl << endl << endl;
 }
-
