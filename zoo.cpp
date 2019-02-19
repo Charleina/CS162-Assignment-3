@@ -22,7 +22,7 @@ Zoo :: Zoo(){
     this->basefood = 50;
     this->whichfood = 0;
     this->nameofzoo = "";
-    this->horrible = false;
+    //this->horrible = false;
     
     this->monkeysize = 0;
     this->m = new Monkey[this->monkeysize];
@@ -71,7 +71,7 @@ Zoo :: Zoo(const Zoo& z1){
     this->basefood= z1.basefood;
     this->whichfood = z1.whichfood;
     this->nameofzoo = z1.nameofzoo;
-    this->horrible = z1.horrible;
+    //this->horrible = z1.horrible;
     
     this->monkeysize = z1.monkeysize;
     this->m = new Monkey[z1.monkeysize];
@@ -106,7 +106,7 @@ void Zoo :: operator=(const Zoo& z){
     this->basefood = z.basefood;
     this->whichfood = z.whichfood;
     this->nameofzoo = z.nameofzoo;
-    this->horrible = z.horrible;
+    //this->horrible = z.horrible;
     
     this->monkeysize = z.monkeysize;
     this->m = new Monkey[z.monkeysize] ();
@@ -185,7 +185,6 @@ void Zoo :: run(){
         //day 30 event
         if(days == 30)
             this->endofday = day30event();
-        
             
         //win game
         if( bank >= 1000000)
@@ -989,6 +988,7 @@ void Zoo :: sick(){
                 }
                 else
                 {
+                    //for when the user doesnt have enough money
                     take_monkey(randomanimal);
                     adultMonkey--;
                 }
@@ -1007,6 +1007,7 @@ void Zoo :: sick(){
                 }
                 else
                 {
+                    //for when the user doesnt have enough money
                     take_monkey(randomanimal);
                     numMonkeybaby--;
                 }
@@ -1040,6 +1041,7 @@ void Zoo :: sick(){
                 }
                 else
                 {
+                    //for when the user doesnt have enough money
                     take_otter(randomanimal);
                     adultOtter--;
                 }
@@ -1058,6 +1060,7 @@ void Zoo :: sick(){
                 }
                 else
                 {
+                    //for when the user doesnt have enough money
                     take_otter(randomanimal);
                     numOtterbaby--;
                 }
@@ -1089,6 +1092,7 @@ void Zoo :: sick(){
                 }
                 else
                 {
+                    //for when the user doesnt have enough money
                     take_sloth(randomanimal);
                     adultSloth--;
                 }
@@ -1106,6 +1110,7 @@ void Zoo :: sick(){
                 }
                 else
                 {
+                    //for when the user doesnt have enough money
                     take_sloth(randomanimal);
                     numSlothbaby--;
                 }
@@ -1349,12 +1354,13 @@ void Zoo :: startday(){
                 string species = "";
                 cin >> species;
                 
+                //for monkey
                 if ( species == "Monkeys" || species == "monkeys" || species == "monkey"  || species == "Monkey" )
                     this->asking_monkey();
-                
+                //for sea otters
                 else if( species == "otter" || species == "otters" || species == "Otters" || species == "Otter" )
                     this->asking_otter();
-                
+                //for sloths
                 else if( species == "Sloth" || species == "sloth" || species == "sloths" || species == "Sloths" )
                     this->asking_sloth();
                 
@@ -1602,6 +1608,7 @@ bool Zoo :: day30event(){
             if(bank < 100000)
             {
                 cout << "The animals will be taken care of, and you will be payed an insurance pay out of $20. Good luck with the rest of your life and maybe try again and make the right amount the next time?" << endl;
+                bank += 20;
             }
             else
             {
